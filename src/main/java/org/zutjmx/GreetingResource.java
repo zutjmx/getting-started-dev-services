@@ -1,5 +1,8 @@
 package org.zutjmx;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.zutjmx.entities.Greeting;
 
 import jakarta.transaction.Transactional;
@@ -20,5 +23,15 @@ public class GreetingResource {
         greeting.name = name;
         greeting.persist();
         return "Hello from Quarkus REST, " + name + "!";
+    }
+
+    @GET
+    @Path("names")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String names() {
+        List<Greeting> greetings = Greeting.listAll();
+        String names = greetings.stream().map(g-> g.name)
+        .collect(Collectors.joining (", "));
+        return "I've said hello to " + names;
     }
 }
